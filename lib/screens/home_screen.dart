@@ -10,62 +10,112 @@ class HomeScreen extends ConsumerWidget {
     final tasks = ref.watch(taskProvider);
     return Scaffold(
       backgroundColor: Colors.black,
-      
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-      ),
-      body: Column( 
+
+      appBar: AppBar(backgroundColor: Colors.black),
+      body: Column(
         children: [
-        
           Padding(
-            padding: const EdgeInsets.all(8.0), 
+            padding: const EdgeInsets.all(8.0),
             child: Container(
-              height: 80, 
+              height: 80,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.black, 
-                borderRadius: BorderRadius.circular(15), 
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(15),
               ),
               child: const Center(
                 child: Text(
-                  'To Do Liste', 
+                  'To Do Liste',
                   style: TextStyle(color: Colors.white, fontSize: 18),
                 ),
               ),
-            ), 
+            ),
           ),
 
-          
-          Expanded( 
+          Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(8.0), 
+              padding: const EdgeInsets.all(8.0),
               child: Container(
-                width: double.infinity, 
+                width: double.infinity,
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 31, 30, 30), 
-                  borderRadius: BorderRadius.circular(20), 
+                  color: const Color.fromARGB(255, 31, 30, 30),
+                  borderRadius: BorderRadius.circular(20),
                 ),
-                // 2. Wir benutzen ListView.builder, um die Liste effizient darzustellen.
                 child: ListView.builder(
-                  itemCount: tasks.length, // Wie viele Einträge gibt es?
+                  itemCount: tasks.length,
                   itemBuilder: (context, index) {
-                    // Hol dir die spezifische Aufgabe für diese Zeile.
                     final task = tasks[index];
-                    // Baue ein ListTile für diese Aufgabe.
+
                     return ListTile(
                       title: Text(
                         task.title,
-                        style: const TextStyle(color: Colors.white),
+                        style: TextStyle(
+                          color: task.completed
+                              ? const Color.fromARGB(255, 87, 87, 87)
+                              : const Color.fromARGB(255, 255, 255, 255),
+                        ),
                       ),
+                      onLongPress: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Aufgabe löschen?'),
+                              content: const Text(
+                                'Soll diese Aufgabe wirklich gelöscht werden?',
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('Abbrechen'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    ref
+                                        .read(taskProvider.notifier)
+                                        .removeTask(task.id);
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('Löschen'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+
                       trailing: Checkbox(
                         value: task.completed,
                         onChanged: (bool? newValue) {
-                          // Sage dem Notifier, dass er den Status dieser einen Aufgabe umschalten soll.
-                          ref.read(taskProvider.notifier).toggleTaskCompletion(task.id);
+                          ref
+                              .read(taskProvider.notifier)
+                              .toggleTaskCompletion(task.id);
                         },
                       ),
                     );
                   },
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 20),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                bottom: 40.0,
+                right: 15.0,
+              ), // Fügt einen Abstand auf allen Seiten hinzu
+              child: FloatingActionButton(
+                backgroundColor: const Color.fromARGB(255, 212, 73, 189),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/add');
+                },
+                child: const Icon(
+                  Icons.add,
+                  color: Color.fromARGB(255, 255, 255, 255),
                 ),
               ),
             ),

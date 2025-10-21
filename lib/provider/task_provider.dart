@@ -1,23 +1,32 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo_riverpod/models/task.dart';
+import 'package:todo_riverpod/services/storage_json.dart';
 
+final taskProvider = NotifierProvider<TaskNotifier, List<Task>>(
+  TaskNotifier.new,
+); //global damit überall verfügbar
+final taskStorageProvider = Provider<TaskStorage>((ref) {
+  return TaskStorage();
+}); //stellt eine einzelne instanz von TaskStorage zur verfügung
 
-final taskProvider = NotifierProvider<TaskNotifier, List<Task>>(TaskNotifier.new);  //global damit überall verfügbar
-
-class TaskNotifier extends Notifier<List<Task>> { //verwatltet daten vom typ List<Task>
+class TaskNotifier extends Notifier<List<Task>> {
+  //verwatltet daten vom typ List<Task>
   @override
   List<Task> build() {
-    // Gib hier ein paar Test-Aufgaben zurück, um zu sehen, ob sie angezeigt werden.
-    return [
-      Task(id: '1', title: 'Einkaufen gehen', completed: false),
-      Task(id: '2', title: 'Flutter lernen', completed: true),
-      Task(id: '3', title: 'Freunde anrufen', completed: false),
-    ];
-  } //leere liste zu beginn
+    _loadTasksFromStorage();
+    return [];
+  }
+
+  void _loadTasksFromStorage() async {
+    final storage = ref.read(taskStorageProvider);
+    final tasks = await storage.loadTasks();
+    state = tasks;
+  }
 
   void addTask(Task task) {
     state = [...state, task];
-  }// kopiert den aktuellen state und fügt task hinzu
+    ref.read(taskStorageProvider).saveTasks(state);
+  } // kopiert den aktuellen state und fügt task hinzu
 
   void toggleTaskCompletion(String id) {
     state = state.map((task) {
@@ -27,9 +36,11 @@ class TaskNotifier extends Notifier<List<Task>> { //verwatltet daten vom typ Lis
         return task;
       }
     }).toList();
+    ref.read(taskStorageProvider).saveTasks(state);
   }
 
   void removeTask(String id) {
     state = state.where((task) => task.id != id).toList();
-  }// behalten nur die tasks deren id nicht der übergebenen id entspricht
+    ref.read(taskStorageProvider).saveTasks(state);
+  } // behalten nur die tasks deren id nicht der übergebenen id entspricht
 }
