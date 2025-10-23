@@ -1,7 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_riverpod/models/task.dart';
-import 'package:todo_riverpod/provider/task_provider.dart';
+import 'package:todo_riverpod/provider/app_state_notifier.dart';
 import 'package:uuid/uuid.dart';
 
 const uuid = Uuid();
@@ -53,6 +54,8 @@ class _AddToDoScreenState extends ConsumerState<AddToDoScreen> {
                 ),
               ),
             ),
+
+            // Divider(color: Colors.grey[700]),
             ElevatedButton(
               onPressed: () {
                 final title = _titleController.text;
@@ -60,9 +63,9 @@ class _AddToDoScreenState extends ConsumerState<AddToDoScreen> {
                   final newTask = Task(
                     id: uuid.v4(),
                     title: title,
-                    completed: false,
+                    // Benutze die ausgewählte Zeit oder die aktuelle
                   );
-                  ref.read(taskProvider.notifier).addTask(newTask);
+                  ref.read(appStateProvider.notifier).addTask(newTask);
                   Navigator.pop(context);
                 }
               },

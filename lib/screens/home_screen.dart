@@ -1,13 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
-import 'package:todo_riverpod/provider/task_provider.dart';
+import 'package:todo_riverpod/provider/app_state_notifier.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tasks = ref.watch(taskProvider);
+    final tasks = ref.watch(appStateProvider).tasks;
     return Scaffold(
       backgroundColor: Colors.black,
 
@@ -74,7 +74,7 @@ class HomeScreen extends ConsumerWidget {
                                 TextButton(
                                   onPressed: () {
                                     ref
-                                        .read(taskProvider.notifier)
+                                        .read(appStateProvider.notifier)
                                         .removeTask(task.id);
                                     Navigator.of(context).pop();
                                   },
@@ -90,7 +90,7 @@ class HomeScreen extends ConsumerWidget {
                         value: task.completed,
                         onChanged: (bool? newValue) {
                           ref
-                              .read(taskProvider.notifier)
+                              .read(appStateProvider.notifier)
                               .toggleTaskCompletion(task.id);
                         },
                       ),
