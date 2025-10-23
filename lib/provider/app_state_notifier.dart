@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:todo_riverpod/models/appState.dart';
+import 'package:todo_riverpod/models/app_state.dart';
 import 'package:todo_riverpod/models/task.dart';
 import 'package:todo_riverpod/services/storage_json.dart';
 

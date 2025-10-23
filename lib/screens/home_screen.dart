@@ -9,9 +9,7 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final tasks = ref.watch(appStateProvider).tasks;
     return Scaffold(
-      backgroundColor: Colors.black,
-
-      appBar: AppBar(backgroundColor: Colors.black),
+      appBar: AppBar(),
       body: Column(
         children: [
           Padding(
@@ -20,14 +18,25 @@ class HomeScreen extends ConsumerWidget {
               height: 80,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.black,
                 borderRadius: BorderRadius.circular(15),
               ),
-              child: const Center(
-                child: Text(
-                  'To Do Liste',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                ),
+              child: Row(
+                children: [
+                  Center(
+                    child: Text(
+                      'To Do Liste',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                  ),
+                  Spacer(),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/settings');
+                    },
+                    icon: const Icon(Icons.settings),
+                    color: Colors.white,
+                  ),
+                ],
               ),
             ),
           ),
@@ -38,7 +47,6 @@ class HomeScreen extends ConsumerWidget {
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 31, 30, 30),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: ListView.builder(
