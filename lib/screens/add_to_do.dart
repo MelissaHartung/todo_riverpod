@@ -31,8 +31,10 @@ class _AddToDoScreenState extends ConsumerState<AddToDoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(backgroundColor: Colors.black),
+      appBar: AppBar(
+  
+        
+      ),
       body: Center(
         child: Column(
           children: [
@@ -40,15 +42,14 @@ class _AddToDoScreenState extends ConsumerState<AddToDoScreen> {
               margin: const EdgeInsets.all(16.0),
               padding: const EdgeInsets.symmetric(horizontal: 12.0),
               decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 40, 40, 40),
+                color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: TextField(
                 controller: _titleController,
-                style: const TextStyle(color: Colors.white),
                 decoration: const InputDecoration(
                   hintText: 'Aufgabe eingeben',
-                  hintStyle: TextStyle(color: Colors.grey),
+                  hintStyle: TextStyle(color: Color.fromARGB(255, 100, 100, 100)),
                   border: InputBorder.none,
                 ),
               ),
@@ -56,6 +57,9 @@ class _AddToDoScreenState extends ConsumerState<AddToDoScreen> {
 
             // Divider(color: Colors.grey[700]),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).cardColor,
+              ),
               onPressed: () {
                 final title = _titleController.text;
                 if (title.isNotEmpty) {

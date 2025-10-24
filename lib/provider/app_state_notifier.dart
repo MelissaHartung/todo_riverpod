@@ -51,4 +51,9 @@ class AppStateNotifier extends Notifier<Appstate> {
   void isDarkMode(bool isDarkMode) {
     state = state.copyWith(isDarkMode: isDarkMode);
   }
+  void deletedtoggledtasks () {
+    final newTasks = state.tasks.where((task) => !task.completed).toList();
+    state =state.copyWith(tasks: newTasks);
+    ref.read(taskStorageProvider).saveTasks(state.tasks);
+  }
 }

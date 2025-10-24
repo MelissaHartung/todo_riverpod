@@ -9,7 +9,16 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final tasks = ref.watch(appStateProvider).tasks;
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/settings');
+            },
+            icon: const Icon(Icons.settings),
+          ),
+        ],
+      ),
       body: Column(
         children: [
           Padding(
@@ -18,25 +27,17 @@ class HomeScreen extends ConsumerWidget {
               height: 80,
               width: double.infinity,
               decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(15),
               ),
-              child: Row(
-                children: [
-                  Center(
-                    child: Text(
-                      'To Do Liste',
-                      style: TextStyle(color: Colors.white, fontSize: 18),
-                    ),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text('To Do Liste', style: TextStyle(fontSize: 18)),
                   ),
-                  Spacer(),
-                  IconButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/settings');
-                    },
-                    icon: const Icon(Icons.settings),
-                    color: Colors.white,
-                  ),
-                ],
+                ),
               ),
             ),
           ),
@@ -47,6 +48,7 @@ class HomeScreen extends ConsumerWidget {
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
+                  color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: ListView.builder(
@@ -59,8 +61,8 @@ class HomeScreen extends ConsumerWidget {
                         task.title,
                         style: TextStyle(
                           color: task.completed
-                              ? const Color.fromARGB(255, 87, 87, 87)
-                              : const Color.fromARGB(255, 255, 255, 255),
+                              ? Colors.grey
+                              : Theme.of(context).textTheme.bodyMedium?.color,
                         ),
                       ),
                       onLongPress: () {
@@ -108,24 +110,24 @@ class HomeScreen extends ConsumerWidget {
               ),
             ),
           ),
-          SizedBox(height: 20),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: const EdgeInsets.only(
-                bottom: 40.0,
-                right: 15.0,
-              ), // Fügt einen Abstand auf allen Seiten hinzu
-              child: FloatingActionButton(
-                backgroundColor: const Color.fromARGB(255, 212, 73, 189),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/add');
-                },
-                child: const Icon(
-                  Icons.add,
-                  color: Color.fromARGB(255, 255, 255, 255),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              children: [
+                ElevatedButton(onPressed: ref.read(appStateProvider.notifier).deletedtoggledtasks, child: Text('Alle löschen')),
+                const Spacer(),
+
+                FloatingActionButton(
+                  backgroundColor: const Color.fromARGB(255, 212, 73, 189),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/add');
+                  },
+                  child: const Icon(
+                    Icons.add,
+                    color: Color.fromARGB(255, 255, 255, 255),
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
         ],

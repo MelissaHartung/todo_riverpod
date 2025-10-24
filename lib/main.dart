@@ -33,6 +33,7 @@ class MyApp extends ConsumerWidget {
           backgroundColor: Colors.black,
           foregroundColor: Colors.white,
         ),
+        cardColor: const Color.fromARGB(255, 40, 40, 40),
         textTheme: const TextTheme(bodyMedium: TextStyle(color: Colors.white)),
       ),
       theme: ThemeData(
@@ -43,6 +44,7 @@ class MyApp extends ConsumerWidget {
           backgroundColor: Colors.white,
           foregroundColor: Colors.black,
         ),
+        cardColor: const Color.fromARGB(255, 216, 199, 215),
         textTheme: const TextTheme(bodyMedium: TextStyle(color: Colors.black)),
       ),
       home: const HomeScreen(),
