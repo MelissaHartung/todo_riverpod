@@ -57,6 +57,7 @@ class HomeScreen extends ConsumerWidget {
                     final task = tasks[index];
 
                     return ListTile(
+                      key: ValueKey(task.id),
                       title: Text(
                         task.title,
                         style: TextStyle(
@@ -114,7 +115,12 @@ class HomeScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(20.0),
             child: Row(
               children: [
-                ElevatedButton(onPressed: ref.read(appStateProvider.notifier).deletedtoggledtasks, child: Text('Alle löschen')),
+                ElevatedButton(
+                  onPressed: ref
+                      .read(appStateProvider.notifier)
+                      .deletedtoggledtasks,
+                  child: Text('Alle löschen'),
+                ),
                 const Spacer(),
 
                 FloatingActionButton(
