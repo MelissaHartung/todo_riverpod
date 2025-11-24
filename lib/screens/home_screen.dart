@@ -86,7 +86,7 @@ class HomeScreen extends ConsumerWidget {
                                   onPressed: () {
                                     ref
                                         .read(appStateProvider.notifier)
-                                        .removeTask(task.id);
+                                        .deleteTask(task);
                                     Navigator.of(context).pop();
                                   },
                                   child: const Text('Löschen'),
