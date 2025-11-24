@@ -1,26 +1,15 @@
-class Task {
-  final String id;
-  final String title;
-  final bool completed;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  Task({required this.id, required this.title, this.completed = false});
-  Task copyWith({String? id, String? title, bool? completed}) {
-    return Task(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      completed: completed ?? this.completed,
-    );
-  }
+part 'task.freezed.dart';
+part 'task.g.dart';
 
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'title': title, 'completed': completed};
-  }
+@freezed
+abstract class Task with _$Task {
+  const factory Task({
+    required String id,
+    required String title,
+    @Default(false) bool completed,
+  }) = _Task;
 
-  factory Task.fromJson(Map<String, dynamic> json) {
-    return Task(
-      id: json['id'],
-      title: json['title'],
-      completed: json['completed'],
-    );
-  }
+  factory Task.fromJson(Map<String, dynamic> json) => _$TaskFromJson(json);
 }
