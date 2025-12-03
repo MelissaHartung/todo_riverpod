@@ -19,42 +19,30 @@ final initialSqfliteTasksProvider = FutureProvider<List<Task>>((ref) {
   return storage.loadTasks();
 });
 
+final initialSettingsProvider = FutureProvider<bool>((ref) {
+  final storage = ref.read(settingsStorageProvider);
+  return storage.loadSettings();
+});
+
 class LocalSqfliteNotifier extends AppStateNotifier {
   @override
   Appstate build() {
-    // Beobachte den FutureProvider. Riverpod wird den Notifier neu erstellen, wenn sich der Zustand ändert.
-    final initialTasksAsyncValue = ref.watch(initialSqfliteTasksProvider);
+    final tasksAsync = ref.watch(initialSqfliteTasksProvider);
+    final isDarkModeAsync = ref.watch(initialSettingsProvider);
 
-    _loadSettings();
-    // Verwende .when, um alle Zustände des Ladevorgangs explizit zu behandeln.
-    return initialTasksAsyncValue.when(
-      data: (tasks) => Appstate(
-        tasks: tasks,
-        isDarkMode: false,
-      ), // Wenn Daten da sind, nutze sie.
-      loading: () => Appstate(
-        tasks: [],
-        isDarkMode: false,
-      ), // Während des Ladens, starte mit einer leeren Liste.
-      error: (err, stack) => Appstate(
-        tasks: [],
-        isDarkMode: false,
-      ), // Im Fehlerfall, starte ebenfalls mit einer leeren Liste.
+    if (tasksAsync.isLoading || isDarkModeAsync.isLoading) {
+      return Appstate(tasks: [], isDarkMode: false);
+    }
+    return Appstate(
+      tasks: tasksAsync.value ?? [],
+      isDarkMode: isDarkModeAsync.value ?? false,
     );
-  }
-
-  Future<void> _loadSettings() async {
-    final storage = ref.read(settingsStorageProvider);
-    final isDarkMode = await storage.loadSettings();
-    state = state.copyWith(isDarkMode: isDarkMode);
   }
 
   @override
   Future<Task?> addTask(Task task) async {
     final storage = ref.read(sqfliteTaskStorageProvider);
-    await storage.saveTask(
-      task,
-    ); // Speichere die Aufgabe über den Service in der DB
+    await storage.saveTask(task);
     state = state.copyWith(tasks: [...state.tasks, task]);
     return task;
   }
